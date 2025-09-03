@@ -1,0 +1,199 @@
+@import "tailwindcss";
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
+  
+  body {
+    @apply bg-white dark:bg-gray-900;
+    overflow-x: hidden;
+    /* Optimize for scrolling performance */
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+  
+  /* Optimize all elements for better performance */
+  * {
+    box-sizing: border-box;
+  }
+  
+  /* Reduce repaints during scrolling */
+  .scroll-optimized {
+    will-change: transform;
+    transform: translateZ(0);
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-gradient-to-r from-orange-500 to-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-orange-600 hover:to-red-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply bg-white/10 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-6 py-3 rounded-lg font-semibold border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 bg-white/10 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-colors duration-150;
+  }
+
+  .card {
+    @apply bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-orange-400 via-red-500 to-pink-500 bg-clip-text text-transparent;
+  }
+}
+
+/* Optimized scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 dark:bg-gray-600 rounded-full;
+  transition: background-color 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-400 dark:bg-gray-500;
+}
+
+/* Simple scrolling containers */
+.scroll-container {
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(156 163 175) transparent;
+}
+
+/* Simple main content scrolling */
+.main-scroll {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Optimized page scrolling */
+.page-scroll {
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  /* Better performance */
+  will-change: scroll-position;
+  transform: translateZ(0);
+}
+
+/* Reduced motion for better performance */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Focus styles - simplified for performance */
+.focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900;
+}
+
+/* Prevent layout shift */
+.prevent-layout-shift {
+  contain: layout style paint;
+}
+
+/* Optimize animations for better scrolling */
+.smooth-animate {
+  transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+  will-change: transform, opacity;
+}
+
+/* Fast hover effects */
+.fast-hover {
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+/* Prevent layout shifts and stabilize scrolling */
+.stable-layout {
+  contain: layout style paint;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Optimize court grid for stable rendering */
+.court-grid {
+  contain: layout style paint;
+  transform: translateZ(0);
+  will-change: auto;
+}
+
+/* Stable button animations */
+.stable-button {
+  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Prevent text reflow during scrolling */
+.stable-text {
+  contain: layout;
+  transform: translateZ(0);
+}
+
+/* Simple modal scrolling */
+.modal-scroll {
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(156 163 175) transparent;
+}
+
+/* Fixed navbar like original websites */
+.fixed-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Content with fixed navbar offset */
+.content-with-navbar {
+  padding-top: 4rem; /* 64px for navbar height */
+  min-height: 100vh;
+}
+
+/* Professional website feel */
+.professional-scroll {
+  scroll-behavior: smooth;
+  scroll-padding-top: 4rem;
+}
+
+/* Simple controlled scrolling */
+.controlled-scroll {
+  overscroll-behavior: contain;
+}
+
+/* Enhanced page transitions */
+.page-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Better focus states for accessibility */
+.focus-visible {
+  outline: 2px solid #f97316;
+  outline-offset: 2px;
+} 
