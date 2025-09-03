@@ -4,8 +4,7 @@ import { Clock } from 'lucide-react';
 const TimeSlotSelector = ({ selectedTimes, onTimeToggle, onClearAll, existingSlots }) => {
   // Predefined time slots (45-minute intervals)
   const timeSlots = [
-    '09:00', '09:45', '10:30', '11:15', '12:00', '12:45',
-    '14:00', '14:45', '15:30', '16:15', '17:00', '17:45',
+     '16:15', '17:00', '17:45',
     '18:30', '19:15', '20:00', '20:45'
   ];
 
