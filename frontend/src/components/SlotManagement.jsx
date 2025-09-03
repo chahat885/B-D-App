@@ -3,7 +3,8 @@ import { motion } from 'framer-motion';
 import { Calendar, Clock, Plus } from 'lucide-react';
 import axios from 'axios';
 import DateSelector from './slot-management/DateSelector';
-import TimeSlotSelector from './slot-management/TimeSlotSelector';
+import TimeSlotSelector from './slot-management/TimeSlotSelector.jsx';
+
 import SlotCreator from './slot-management/SlotCreator';
 import MessageDisplay from './slot-management/MessageDisplay';
 

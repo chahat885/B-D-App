@@ -2,34 +2,24 @@ import { motion } from 'framer-motion';
 import { Clock } from 'lucide-react';
 
 const TimeSlotSelector = ({ selectedTimes, onTimeToggle, onClearAll, existingSlots }) => {
-  // Predefined time slots (45-minute intervals)
-  const timeSlots = [
-     '16:15', '17:00', '17:45',
-    '18:30', '19:15', '20:00', '20:45'
-  ];
+  // Morning slots (from 5:00 AM, 45-minute intervals)
+  const morningSlots = ['05:00', '05:45', '06:30', '07:15'];
+
+  // Evening slots (from 4:15 PM, 45-minute intervals)
+  const eveningSlots = ['16:15', '17:00', '17:45', '18:30', '19:15'];
 
   const isTimeSlotSelected = (time) => selectedTimes.includes(time);
   const isTimeSlotAlreadyExists = (time) => existingSlots.includes(time);
 
-  return (
-    <motion.div
-      className="bg-white rounded-xl shadow-lg border border-gray-100 p-6"
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ delay: 0.4 }}
-    >
-      <div className="flex items-center space-x-3 mb-6">
-        <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
-          <Clock className="w-6 h-6 text-primary-600" />
-        </div>
-        <h2 className="text-xl font-semibold text-gray-800">Select Time Slots</h2>
-      </div>
-
-      <div className="grid grid-cols-4 gap-3 mb-6">
-        {timeSlots.map((time) => {
+  // Reusable slot renderer
+  const renderSlots = (slots, section) => (
+    <div className="mb-6">
+      <h3 className="text-lg font-semibold text-gray-700 mb-3">{section} Slots</h3>
+      <div className="grid grid-cols-4 gap-3">
+        {slots.map((time) => {
           const isSelected = isTimeSlotSelected(time);
           const alreadyExists = isTimeSlotAlreadyExists(time);
-          
+
           return (
             <motion.button
               key={time}
@@ -47,11 +37,38 @@ const TimeSlotSelector = ({ selectedTimes, onTimeToggle, onClearAll, existingSlo
               title={alreadyExists ? 'Slot already exists' : ''}
             >
               {time}
-              {alreadyExists && <span className="block text-xs text-red-400">Exists</span>}
+              <span className="block text-xs text-gray-500">
+                {section}
+              </span>
+              {alreadyExists && (
+                <span className="block text-xs text-red-400">Exists</span>
+              )}
             </motion.button>
           );
         })}
       </div>
+    </div>
+  );
+
+  return (
+    <motion.div
+      className="bg-white rounded-xl shadow-lg border border-gray-100 p-6"
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: 0.4 }}
+    >
+      <div className="flex items-center space-x-3 mb-6">
+        <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+          <Clock className="w-6 h-6 text-primary-600" />
+        </div>
+        <h2 className="text-xl font-semibold text-gray-800">Select Time Slots</h2>
+      </div>
+
+      {/* Morning Section */}
+      {renderSlots(morningSlots, 'Morning')}
+
+      {/* Evening Section */}
+      {renderSlots(eveningSlots, 'Evening')}
 
       <div className="flex items-center justify-between">
         <div className="text-sm text-gray-600">
