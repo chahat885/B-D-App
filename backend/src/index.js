@@ -19,9 +19,9 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 // API routes
-app.use('/api/auth', authRoutes);
-//app.use('/api/slots', slotRoutes);
-//app.use('/api/bookings', bookingRoutes);
+//app.use('/api/auth', authRoutes);
+app.use('/api/slots', slotRoutes);
+app.use('/api/bookings', bookingRoutes);
 
 // Serve frontend
 if (process.env.NODE_ENV === 'production') {
