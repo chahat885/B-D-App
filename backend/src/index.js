@@ -25,13 +25,16 @@ app.use('/api/bookings', bookingRoutes);
 
 // Serve frontend
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../frontend/dist")));
-  
-  // This line is the solution for the TypeError
+  const frontendPath = path.join(__dirname, "../frontend/dist");
+
+  app.use(express.static(frontendPath));
+
+  // Catch-all route for React
   app.get("/*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
+    res.sendFile(path.join(frontendPath, "index.html"));
   });
 }
+
 
 const PORT = process.env.PORT || 4000;
 
