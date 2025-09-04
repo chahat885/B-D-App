@@ -49,7 +49,7 @@ const CalendarPage = () => {
       const from = currentWeek[0].toISOString();
       const to = new Date(currentWeek[6].getTime() + 24 * 60 * 60 * 1000).toISOString();
       
-      const response = await axios.get(`${API_BASE}/api/slots?from=${from}&to=${to}`, {
+      const response = await axios.get(`${API_BASE}/api/slots/list?from=${from}&to=${to}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }

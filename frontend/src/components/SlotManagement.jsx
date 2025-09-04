@@ -32,7 +32,7 @@ const SlotManagement = () => {
       endOfDay.setHours(23, 59, 59, 999);
 
       const response = await axios.get(
-        `${API_BASE}/api/slots?from=${startOfDay.toISOString()}&to=${endOfDay.toISOString()}`,
+        `${API_BASE}/api/slots/list?from=${startOfDay.toISOString()}&to=${endOfDay.toISOString()}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,

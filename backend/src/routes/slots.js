@@ -57,7 +57,7 @@ router.post(
 
 // Fetch slots in a date range using a cursor for efficiency
 router.get(
-  '/',
+  '/list',
   [query('from').isISO8601(), query('to').isISO8601()],
   async (req, res) => {
     const errors = validationResult(req);
