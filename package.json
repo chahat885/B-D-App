@@ -1,0 +1,21 @@
+{
+  "name": "badminton-court-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build":"",
+    "start":"node src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chahat885/B-D-App.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chahat885/B-D-App/issues"
+  },
+  "homepage": "https://github.com/chahat885/B-D-App#readme",
+  "description": ""
+}
