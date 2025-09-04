@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "preinstall": "npx npm-force-resolutions",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/index.js",
     "dev": "nodemon src/index.js"
@@ -19,12 +20,14 @@
     "express": "^5.1.0",
     "express-validator": "^7.2.1",
     "jsonwebtoken": "^9.0.2",
+    "mime-types": "^2.1.35",
     "mongoose": "^8.18.0",
     "morgan": "^1.10.1",
     "nodemailer": "^7.0.6"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "npm-force-resolutions": "^0.0.10"
   },
   "engines": {
     "node": "20.x"
