@@ -20,7 +20,7 @@ app.use(morgan('dev'));
 
 // API routes
 app.use('/api/auth', authRoutes);
-app.use('/api/slots', slotRoutes);
+//app.use('/api/slots', slotRoutes);
 app.use('/api/bookings', bookingRoutes);
 
 // Serve frontend
