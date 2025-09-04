@@ -4,7 +4,6 @@ import { Calendar, Clock, Plus } from 'lucide-react';
 import axios from 'axios';
 import DateSelector from './slot-management/DateSelector';
 import TimeSlotSelector from './slot-management/TimeSlotSelector.jsx';
-
 import SlotCreator from './slot-management/SlotCreator';
 import MessageDisplay from './slot-management/MessageDisplay';
 
@@ -30,17 +29,20 @@ const SlotManagement = () => {
       const endOfDay = new Date(date);
       endOfDay.setHours(23, 59, 59, 999);
 
-      const response = await axios.get(`${API_BASE}/api/slots?from=${startOfDay.toISOString()}&to=${endOfDay.toISOString()}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
+      const response = await axios.get(
+        `${API_BASE}/api/slots?from=${startOfDay.toISOString()}&to=${endOfDay.toISOString()}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
         }
+      );
+
+      const existingTimes = response.data.map((slot) => {
+        const slotTime = new Date(slot.startTime);
+        return slotTime.toTimeString().slice(0, 5); // HH:MM
       });
 
-      const existingTimes = response.data.map(slot => {
-        const slotTime = new Date(slot.startTime);
-        return slotTime.toTimeString().slice(0, 5); // Get HH:MM format
-      });
-      
       setExistingSlots(existingTimes);
     } catch (error) {
       console.error('Failed to fetch existing slots:', error);
@@ -54,11 +56,20 @@ const SlotManagement = () => {
     fetchExistingSlots(date);
   };
 
+  // prevent past slots
   const toggleTimeSlot = (time) => {
-    setSelectedTimes(prev => 
-      prev.includes(time) 
-        ? prev.filter(t => t !== time)
-        : [...prev, time]
+    const now = new Date();
+    const [hours, minutes] = time.split(':');
+    const slotDate = new Date(selectedDate);
+    slotDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+
+    if (slotDate < now) {
+      showMessage('error', 'You cannot create past slots');
+      return;
+    }
+
+    setSelectedTimes((prev) =>
+      prev.includes(time) ? prev.filter((t) => t !== time) : [...prev, time]
     );
   };
 
@@ -70,22 +81,25 @@ const SlotManagement = () => {
 
     setLoading(true);
     try {
-      const startTimes = selectedTimes.map(time => {
+      const startTimes = selectedTimes.map((time) => {
         const [hours, minutes] = time.split(':');
         const date = new Date(selectedDate);
         date.setHours(parseInt(hours), parseInt(minutes), 0, 0);
         return date.toISOString();
       });
 
-      await axios.post(`${API_BASE}/api/slots`, { startTimes }, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
+      await axios.post(
+        `${API_BASE}/api/slots`,
+        { startTimes },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
         }
-      });
+      );
 
       showMessage('success', `Successfully created ${selectedTimes.length} slot(s)`);
       setSelectedTimes([]);
-      // Refresh existing slots
       fetchExistingSlots(selectedDate);
     } catch (error) {
       showMessage('error', error.response?.data?.error || 'Failed to create slots');
@@ -103,15 +117,14 @@ const SlotManagement = () => {
       <MessageDisplay message={message} />
 
       <div className="grid lg:grid-cols-2 gap-8">
-        <DateSelector 
-          selectedDate={selectedDate} 
-          onDateChange={handleDateChange} 
-        />
+        <DateSelector selectedDate={selectedDate} onDateChange={handleDateChange} />
+
         <TimeSlotSelector
           selectedTimes={selectedTimes}
           onTimeToggle={toggleTimeSlot}
           onClearAll={() => setSelectedTimes([])}
           existingSlots={existingSlots}
+          selectedDate={selectedDate}
         />
       </div>
 
@@ -137,7 +150,7 @@ const SlotManagement = () => {
             <h4 className="font-medium text-gray-800 mb-2">1. Select Date</h4>
             <p className="text-sm text-gray-600">Choose the date for which you want to create slots</p>
           </div>
-          
+
           <div className="text-center">
             <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mx-auto mb-3">
               <Clock className="w-6 h-6 text-primary-600" />
@@ -145,7 +158,7 @@ const SlotManagement = () => {
             <h4 className="font-medium text-gray-800 mb-2">2. Choose Times</h4>
             <p className="text-sm text-gray-600">Select specific time slots (45-minute intervals)</p>
           </div>
-          
+
           <div className="text-center">
             <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mx-auto mb-3">
               <Plus className="w-6 h-6 text-primary-600" />

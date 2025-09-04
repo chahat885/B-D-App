@@ -129,13 +129,14 @@ const CalendarPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-orange-500 to-red-600 rounded-full mb-6 shadow-lg">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-orange-500 to-red-600 rounded-full mb-4 shadow-lg">
             <Trophy className="w-10 h-10 text-white" />
           </div>
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-orange-600 via-red-600 to-pink-600 bg-clip-text text-transparent mb-4">
-            Court Booking Calendar
-          </h1>
-          <p className="text-gray-600 text-xl max-w-2xl mx-auto leading-relaxed">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-orange-600 via-red-600 to-pink-600 bg-clip-text text-transparent mb-6 pb-2">
+  Court Booking Calendar
+</h1>
+
+          <p className="text-gray-600 text-xl max-w-2xl mx-auto leading-relaxed ">
             Select a date and time slot to book your badminton court. 
             <span className="text-orange-600 font-semibold"> Real-time availability</span> with instant booking confirmation.
           </p>

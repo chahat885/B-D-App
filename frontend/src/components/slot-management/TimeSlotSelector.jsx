@@ -1,12 +1,21 @@
-import { motion } from 'framer-motion';
+import { motion } from 'framer-motion'; 
 import { Clock } from 'lucide-react';
 
 const TimeSlotSelector = ({ selectedTimes, onTimeToggle, onClearAll, existingSlots }) => {
   // Morning slots (from 5:00 AM, 45-minute intervals)
-  const morningSlots = ['05:00', '05:45', '06:30', '07:15'];
+  const morningSlots = ['05:00', '05:45', '06:30', '07:15','08:00'];
 
   // Evening slots (from 4:15 PM, 45-minute intervals)
   const eveningSlots = ['16:15', '17:00', '17:45', '18:30', '19:15'];
+
+  // ✅ Convert 24-hour "HH:mm" → 12-hour "hh:mm AM/PM"
+  const formatTo12Hour = (time) => {
+    const [hourStr, minute] = time.split(':');
+    let hour = parseInt(hourStr, 10);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    hour = hour % 12 || 12; 
+    return `${hour}:${minute} ${ampm}`;
+  };
 
   const isTimeSlotSelected = (time) => selectedTimes.includes(time);
   const isTimeSlotAlreadyExists = (time) => existingSlots.includes(time);
@@ -36,7 +45,8 @@ const TimeSlotSelector = ({ selectedTimes, onTimeToggle, onClearAll, existingSlo
               disabled={alreadyExists}
               title={alreadyExists ? 'Slot already exists' : ''}
             >
-              {time}
+              {/* ✅ Show converted 12-hour format */}
+              {formatTo12Hour(time)}
               <span className="block text-xs text-gray-500">
                 {section}
               </span>
