@@ -6,6 +6,7 @@ import BookingModal from '../components/BookingModal';
 import CourtGrid from '../components/court-display/CourtGrid';
 
 const CalendarPage = () => {
+  console.log('MODE:', import.meta.env.MODE);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [slots, setSlots] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -13,7 +14,11 @@ const CalendarPage = () => {
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [currentWeek, setCurrentWeek] = useState([]);
 
-  const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+  const API_BASE = import.meta.env.MODE === 'development' 
+  ? 'http://localhost:4000' 
+  : ''; // production
+ 
+
 
   useEffect(() => {
     generateWeekDates();

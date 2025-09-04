@@ -10,7 +10,9 @@ const BookingsManagement = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
 
-  const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+  const API_BASE = import.meta.env.MODE === 'development' 
+  ? 'http://localhost:4000' 
+  : ''; // production
 
   const showMessage = (type, text) => {
     setMessage({ type, text });
