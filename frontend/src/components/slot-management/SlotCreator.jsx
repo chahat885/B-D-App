@@ -1,21 +1,24 @@
-import { motion } from 'framer-motion';
-import { Plus } from 'lucide-react';
+import { motion } from 'framer-motion'; // For smooth animations
+import { Plus } from 'lucide-react'; // Icon for adding slots
 
+// SlotCreator component receives selectedTimes, loading state and onCreateSlots function as props
 const SlotCreator = ({ selectedTimes, loading, onCreateSlots }) => {
   return (
     <motion.div
       className="text-center"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.6 }}
+      initial={{ opacity: 0, y: 20 }} // Initial animation state
+      animate={{ opacity: 1, y: 0 }} // Animate to visible state
+      transition={{ delay: 0.6 }} // Delay before animation starts
     >
       <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
         <h3 className="text-lg font-semibold text-gray-800 mb-4">Create Slots</h3>
         
+        {/* Display selected slots if any */}
         {selectedTimes.length > 0 && (
           <div className="mb-4 p-4 bg-primary-50 rounded-lg">
             <h4 className="font-medium text-primary-800 mb-2">Selected Slots:</h4>
             <div className="flex flex-wrap gap-2">
+              {/* Show each selected time as a badge */}
               {selectedTimes.map((time) => (
                 <span
                   key={time}
@@ -28,19 +31,22 @@ const SlotCreator = ({ selectedTimes, loading, onCreateSlots }) => {
           </div>
         )}
 
+        {/* Button to create slots */}
         <motion.button
-          onClick={onCreateSlots}
-          disabled={loading || selectedTimes.length === 0}
+          onClick={onCreateSlots} // Call parent function to create slots
+          disabled={loading || selectedTimes.length === 0} // Disable button if loading or no slots selected
           className="btn-primary inline-flex items-center space-x-2"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.05 }} // Animate on hover
+          whileTap={{ scale: 0.95 }} // Animate on click
         >
-          <Plus className="w-5 h-5" />
+          <Plus className="w-5 h-5" /> {/* Plus icon */}
           <span>
+            {/* Show different text depending on loading or number of selected slots */}
             {loading ? 'Creating...' : `Create ${selectedTimes.length} Slot${selectedTimes.length !== 1 ? 's' : ''}`}
           </span>
         </motion.button>
 
+        {/* Info text below the button */}
         <p className="text-sm text-gray-500 mt-4">
           Slots will be created with 6 sub-courts each, ready for student bookings
         </p>
