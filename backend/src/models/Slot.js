@@ -1,34 +1,36 @@
 import mongoose from 'mongoose';
 
-// 3 Singles courts (2 players each) + 3 Doubles courts (4 players each) = 6 courts per slot
-const SINGLES_COURTS = 3;
-const DOUBLES_COURTS = 3;
-const TOTAL_COURTS = SINGLES_COURTS + DOUBLES_COURTS;
-const SLOT_DURATION_MINUTES = 45;
+// Constants for courts and slot duration
+const SINGLES_COURTS = 3;          // Number of singles courts (2 players each)
+const DOUBLES_COURTS = 3;          // Number of doubles courts (4 players each)
+const TOTAL_COURTS = SINGLES_COURTS + DOUBLES_COURTS; // Total sub-courts per slot
+const SLOT_DURATION_MINUTES = 45;   // Duration of each slot in minutes
 
+// Define Slot schema
 const SlotSchema = new mongoose.Schema(
   {
-    startTime: { type: Date, required: true, index: true },
-    endTime: { type: Date, required: true },
-    // Track capacity and occupancy by sub-court
+    startTime: { type: Date, required: true, index: true }, // Slot start time (indexed for faster queries)
+    endTime: { type: Date, required: true },                // Slot end time
+    // Array of sub-courts for this slot
     subCourts: [
       {
-        index: { type: Number, required: true },
-        capacity: { type: Number, required: true, default: 2 }, // Will be set based on court type
-        courtType: { type: String, enum: ['singles', 'doubles'], required: true },
+        index: { type: Number, required: true },           // Unique index for each sub-court
+        capacity: { type: Number, required: true, default: 2 }, // Max players in this sub-court
+        courtType: { type: String, enum: ['singles', 'doubles'], required: true }, // Type of court
       },
     ],
   },
-  { timestamps: true }
+  { timestamps: true } // Automatically add createdAt and updatedAt
 );
 
+// Static method to create a slot with default sub-courts
 SlotSchema.statics.createWithDefaults = function createWithDefaults(startTime) {
-  const start = new Date(startTime);
-  const end = new Date(start.getTime() + SLOT_DURATION_MINUTES * 60 * 1000);
+  const start = new Date(startTime); // Convert input to Date object
+  const end = new Date(start.getTime() + SLOT_DURATION_MINUTES * 60 * 1000); // End time = start + 45 mins
   
   const subCourts = [];
-  
-  // Create 3 Singles courts (capacity: 2 players each)
+
+  // Initialize singles courts (2 players each)
   for (let i = 0; i < SINGLES_COURTS; i++) {
     subCourts.push({
       index: i,
@@ -36,8 +38,8 @@ SlotSchema.statics.createWithDefaults = function createWithDefaults(startTime) {
       courtType: 'singles'
     });
   }
-  
-  // Create 3 Doubles courts (capacity: 4 players each)
+
+  // Initialize doubles courts (4 players each)
   for (let i = 0; i < DOUBLES_COURTS; i++) {
     subCourts.push({
       index: i + SINGLES_COURTS,
@@ -45,41 +47,39 @@ SlotSchema.statics.createWithDefaults = function createWithDefaults(startTime) {
       courtType: 'doubles'
     });
   }
-  
+
+  // Return a slot object ready to save in DB
   return { startTime: start, endTime: end, subCourts };
 };
 
+// Instance method to check current status of the slot
 SlotSchema.methods.getStatus = async function getStatus() {
-  // Get total players from bookings
-  const Booking = mongoose.model('Booking');
+  const Booking = mongoose.model('Booking'); // Get Booking model
+  // Fetch all active bookings for this slot (not cancelled)
   const activeBookings = await Booking.find({ 
     slot: this._id, 
     cancelledAt: null 
   });
-  
+
+  // If no bookings, slot is fully available
   if (activeBookings.length === 0) return 'available';
-  
-  // Check court occupancy
+
+  // Track occupancy per sub-court
   const courtOccupancy = {};
   activeBookings.forEach(booking => {
-    if (!courtOccupancy[booking.subCourtIndex]) {
-      courtOccupancy[booking.subCourtIndex] = 0;
-    }
+    if (!courtOccupancy[booking.subCourtIndex]) courtOccupancy[booking.subCourtIndex] = 0;
     courtOccupancy[booking.subCourtIndex] += booking.playersCount;
   });
-  
-  // Check if any court has space
+
+  // Check if any sub-court still has space
   for (let i = 0; i < this.subCourts.length; i++) {
     const subCourt = this.subCourts[i];
     const occupied = courtOccupancy[i] || 0;
-    if (occupied < subCourt.capacity) {
-      return 'partial'; // At least one court has space
-    }
+    if (occupied < subCourt.capacity) return 'partial'; // At least one sub-court has space
   }
-  
-  return 'full'; // All courts are full
+
+  // If all sub-courts are full
+  return 'full';
 };
 
 export default mongoose.model('Slot', SlotSchema);
-
-
