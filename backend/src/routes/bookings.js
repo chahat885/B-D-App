@@ -93,6 +93,16 @@ router.post(
       if (subCourt.courtType !== gameMode) {
         throw new Error(`This court is for ${subCourt.courtType} games only`);
       }
+      
+      // Check if user already has a booking for this time slot on *any* sub-court
+      const existing = await Booking.findOne({ 
+        user: userId, 
+        slot: slot._id,
+        cancelledAt: null 
+      }).session(session);
+      if (existing) {
+        throw new Error(`You already have a booking for this time slot on ${gameMode} court ${existing.subCourtIndex+1}.`);
+      }
 
       // Check if subcourt has enough space for 1 more player
       const activeBookings = await Booking.find({ 
@@ -108,16 +118,7 @@ router.post(
       if (totalPlayersBooked >= subCourt.capacity) {
         throw new Error(`Court is full. ${totalPlayersBooked}/${subCourt.capacity} players already booked`);
       }
-
-      // Prevent duplicate booking by same user on same subcourt
-      const existing = await Booking.findOne({ 
-        user: userId, 
-        slot: slot._id, 
-        subCourtIndex: subCourtIndex,
-        cancelledAt: null 
-      }).session(session);
-      if (existing) throw new Error('Already booked this court');
-
+      
       // Create the booking for 1 player (individual booking)
       const booking = await Booking.create([
         { user: userId, slot: slot._id, subCourtIndex, gameMode, playersCount: 1 },
@@ -241,5 +242,3 @@ router.post('/admin-cancel', auth(), [body('bookingId').isMongoId()], async (req
 });
 
 export default router;
-
-
