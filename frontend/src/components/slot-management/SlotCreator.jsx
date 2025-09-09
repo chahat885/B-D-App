@@ -4,28 +4,37 @@ import { Plus } from 'lucide-react';
 const SlotCreator = ({ selectedTimes, loading, onCreateSlots }) => {
   return (
     <motion.div
-      className="text-center"
+      className="text-center flex flex-col items-center"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.6 }}
     >
-      <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">Create Slots</h3>
+      <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-6 w-full max-w-lg">
+        <h3 className="text-2xl font-bold text-gray-800 mb-6">Create Slots</h3>
         
         {selectedTimes.length > 0 && (
-          <div className="mb-4 p-4 bg-primary-50 rounded-lg">
-            <h4 className="font-medium text-primary-800 mb-2">Selected Slots:</h4>
-            <div className="flex flex-wrap gap-2">
+          <motion.div
+            className="mb-6 p-4 bg-gray-50 rounded-lg"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <h4 className="font-medium text-gray-700 mb-3 text-lg">Selected Slots:</h4>
+            <div className="flex flex-wrap justify-center gap-3">
               {selectedTimes.map((time) => (
-                <span
+                <motion.span
                   key={time}
-                  className="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm"
+                  className="px-4 py-2 text-sm font-semibold rounded-full text-white
+                             bg-gradient-to-r from-teal-400 to-emerald-500 shadow-md"
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ type: 'spring', stiffness: 200, damping: 10 }}
                 >
                   {time}
-                </span>
+                </motion.span>
               ))}
             </div>
-          </div>
+          </motion.div>
         )}
 
         <motion.button
