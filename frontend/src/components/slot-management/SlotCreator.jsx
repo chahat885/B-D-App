@@ -5,24 +5,16 @@ import { Plus } from 'lucide-react'; // Icon for adding slots
 const SlotCreator = ({ selectedTimes, loading, onCreateSlots }) => {
   return (
     <motion.div
-<<<<<<< HEAD
       className="text-center flex flex-col items-center"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.6 }}
-=======
-      className="text-center"
-      initial={{ opacity: 0, y: 20 }} // Initial animation state
-      animate={{ opacity: 1, y: 0 }} // Animate to visible state
-      transition={{ delay: 0.6 }} // Delay before animation starts
->>>>>>> 71d340dabd54d4e68882d293e64877fdb0d264a4
     >
       <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-6 w-full max-w-lg">
         <h3 className="text-2xl font-bold text-gray-800 mb-6">Create Slots</h3>
         
         {/* Display selected slots if any */}
         {selectedTimes.length > 0 && (
-<<<<<<< HEAD
           <motion.div
             className="mb-6 p-4 bg-gray-50 rounded-lg"
             initial={{ opacity: 0, y: -10 }}
@@ -31,12 +23,6 @@ const SlotCreator = ({ selectedTimes, loading, onCreateSlots }) => {
           >
             <h4 className="font-medium text-gray-700 mb-3 text-lg">Selected Slots:</h4>
             <div className="flex flex-wrap justify-center gap-3">
-=======
-          <div className="mb-4 p-4 bg-primary-50 rounded-lg">
-            <h4 className="font-medium text-primary-800 mb-2">Selected Slots:</h4>
-            <div className="flex flex-wrap gap-2">
-              {/* Show each selected time as a badge */}
->>>>>>> 71d340dabd54d4e68882d293e64877fdb0d264a4
               {selectedTimes.map((time) => (
                 <motion.span
                   key={time}

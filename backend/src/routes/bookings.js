@@ -113,7 +113,7 @@ router.post(
         cancelledAt: null 
       }).session(session);
       if (existing) {
-        throw new Error(`You already have a booking for this time slot on ${gameMode} court ${existing.subCourtIndex+1}.`);
+        throw new Error(`You already have a booking for this time slot on court ${existing.subCourtIndex+1}.`);
       }
 
       // Check how many players are already booked
@@ -130,22 +130,8 @@ router.post(
       if (totalPlayersBooked >= subCourt.capacity) {
         throw new Error(`Court is full. ${totalPlayersBooked}/${subCourt.capacity} players already booked`);
       }
-<<<<<<< HEAD
       
       // Create the booking for 1 player (individual booking)
-=======
-
-      // Prevent user from booking the same court again
-      const existing = await Booking.findOne({ 
-        user: userId, 
-        slot: slot._id, 
-        subCourtIndex: subCourtIndex,
-        cancelledAt: null 
-      }).session(session);
-      if (existing) throw new Error('Already booked this court');
-
-      // Create the booking for 1 player
->>>>>>> 71d340dabd54d4e68882d293e64877fdb0d264a4
       const booking = await Booking.create([
         { user: userId, slot: slot._id, subCourtIndex, gameMode, playersCount: 1 },
       ], { session });
