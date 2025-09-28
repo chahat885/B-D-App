@@ -8,7 +8,7 @@ const router = express.Router();
 
 // Send OTP for email verification
 router.post(
-  '/send-otp',
+  '/resend-otp',
   [body('email').isEmail().custom(email => {
     if (!email.endsWith('@nitk.edu.in')) {
       throw new Error('Only NITK college emails are allowed');

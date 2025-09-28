@@ -5,7 +5,6 @@ import Booking from '../models/Booking.js';
 export const cleanupPastSlots = async () => {
   try {
     const now = new Date();
-    
     // Find all slots that have ended
     const pastSlots = await Slot.find({
       endTime: { $lt: now }

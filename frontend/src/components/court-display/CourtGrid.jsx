@@ -1,46 +1,52 @@
 import { motion } from 'framer-motion';
 import { Users, User } from 'lucide-react';
 
+// CourtGrid component displays a single booking slot with courts and availability
 const CourtGrid = ({ slot, onSlotClick }) => {
-  // Format time with AM/PM for morning, 24-hour + PM for evening
+  // Format slot start/end time into readable format (AM/PM for morning, 24hr+PM for evening)
   const formatTime = (dateString) => {
     const date = new Date(dateString);
     const hours = date.getHours();
     const minutes = date.getMinutes().toString().padStart(2, '0');
     if (hours < 12) {
-      return `${hours === 0 ? 12 : hours}:${minutes} AM`; // Morning
+      return `${hours === 0 ? 12 : hours}:${minutes} AM`; // e.g., 10:30 AM
     } else {
-      return `${hours}:${minutes} PM`; // Evening (24-hour + PM)
+      return `${hours}:${minutes} PM`; // e.g., 17:30 PM
     }
   };
 
-  // Morning / Evening helper, subtle styling
+  // Determine whether the slot is in the morning or evening
   const getPeriod = (dateString) => {
     const hours = new Date(dateString).getHours();
     return hours < 12 ? "Morning" : "Evening";
   };
 
+  // Return availability status and corresponding Tailwind classes for each sub-court
   const getSubCourtStatus = (subCourtIndex, availability) => {
     if (!availability) return { status: 'unknown', color: 'bg-gray-100 border-gray-300 text-gray-700' };
     const subCourtData = availability.find(a => a.subCourtIndex === subCourtIndex);
+
     if (!subCourtData) return { status: 'unknown', color: 'bg-gray-100 border-gray-300 text-gray-700' };
     if (subCourtData.available === 0) return { status: 'full', color: 'bg-red-100 border-red-300 text-red-700' };
     else if (subCourtData.occupied > 0) return { status: 'partial', color: 'bg-yellow-100 border-yellow-300 text-yellow-700' };
     else return { status: 'available', color: 'bg-green-100 border-green-300 text-green-700' };
   };
 
+  // Extract game mode info for a sub-court (singles/doubles, number of players, join option)
   const getGameModeInfo = (subCourtIndex, availability) => {
     if (!availability) return null;
     const subCourtData = availability.find(a => a.subCourtIndex === subCourtIndex);
     if (!subCourtData || subCourtData.bookings.length === 0) return null;
+
     const booking = subCourtData.bookings[0];
     return {
-      mode: booking.gameMode,
-      players: booking.playersCount,
-      canJoin: booking.gameMode === 'singles' && booking.playersCount === 1
+      mode: booking.gameMode, // singles or doubles
+      players: booking.playersCount, // number of players currently booked
+      canJoin: booking.gameMode === 'singles' && booking.playersCount === 1 // join if 1/2 players
     };
   };
 
+  // Predefined indices for singles (2 players) and doubles (4 players) courts
   const singlesCourts = [0, 1, 2];
   const doublesCourts = [3, 4, 5];
 
@@ -48,16 +54,20 @@ const CourtGrid = ({ slot, onSlotClick }) => {
     <div
       className={`p-6 rounded-2xl border-2 stable-layout cursor-pointer transition-all duration-300 ${
         slot.status === 'full'
-          ? 'border-gray-200 bg-gray-50 cursor-not-allowed opacity-75'
-          : 'border-gray-200 hover:border-orange-300 hover:shadow-xl hover:scale-[1.02] bg-white/90 backdrop-blur-sm'
+          ? 'border-gray-200 bg-gray-50 cursor-not-allowed opacity-75' // disabled if full
+          : 'border-gray-200 hover:border-orange-300 hover:shadow-xl hover:scale-[1.02] bg-white/90 backdrop-blur-sm' // hover effect if available
       }`}
-      onClick={() => slot.status !== 'full' && onSlotClick(slot)}
+      onClick={() => slot.status !== 'full' && onSlotClick(slot)} // trigger click only if slot not full
     >
+      {/* Slot Header Section */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-4">
+          {/* Icon Section */}
           <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl flex items-center justify-center shadow-lg">
             <Users className="w-7 h-7 text-white" />
           </div>
+
+          {/* Time and Mode Info */}
           <div>
             <h3 className="text-xl font-semibold text-gray-800 mb-1">
               {formatTime(slot.startTime)} - {formatTime(slot.endTime)}{" "}
@@ -73,6 +83,7 @@ const CourtGrid = ({ slot, onSlotClick }) => {
           </div>
         </div>
 
+        {/* Slot Availability Status (Available, Partial, Full) */}
         <div className={`inline-flex items-center px-4 py-2 rounded-xl text-sm font-semibold border shadow-sm ${
           slot.status === 'available' ? 'bg-green-100 text-green-800 border-green-200' :
           slot.status === 'partial' ? 'bg-yellow-100 text-yellow-800 border-yellow-200' :
@@ -82,9 +93,9 @@ const CourtGrid = ({ slot, onSlotClick }) => {
         </div>
       </div>
 
-      {/* Court Layout */}
+      {/* Courts Layout Grid */}
       <div className="grid grid-cols-2 gap-6 court-grid">
-        {/* Singles Courts */}
+        {/* Singles Courts Section */}
         <div className="space-y-4">
           <div className="flex items-center space-x-2 mb-4">
             <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -93,6 +104,8 @@ const CourtGrid = ({ slot, onSlotClick }) => {
             <h4 className="text-lg font-semibold text-gray-800">Singles Courts</h4>
             <span className="text-sm text-gray-500">(2 players)</span>
           </div>
+
+          {/* Render singles courts */}
           <div className="space-y-2">
             {singlesCourts.map((courtIndex) => {
               const status = getSubCourtStatus(courtIndex, slot.availability);
@@ -125,7 +138,7 @@ const CourtGrid = ({ slot, onSlotClick }) => {
           </div>
         </div>
 
-        {/* Doubles Courts */}
+        {/* Doubles Courts Section */}
         <div className="space-y-4">
           <div className="flex items-center space-x-2 mb-4">
             <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
@@ -134,6 +147,8 @@ const CourtGrid = ({ slot, onSlotClick }) => {
             <h4 className="text-lg font-semibold text-gray-800">Doubles Courts</h4>
             <span className="text-sm text-gray-500">(4 players)</span>
           </div>
+
+          {/* Render doubles courts */}
           <div className="space-y-2">
             {doublesCourts.map((courtIndex) => {
               const status = getSubCourtStatus(courtIndex, slot.availability);

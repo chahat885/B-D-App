@@ -146,38 +146,37 @@ const MyBookingsPage = () => {
               </h2>
               
               {bookings.map((booking) => (
-                <motion.div
-                  key={booking._id}
-                  className={`p-6 rounded-lg border-2 transition-all duration-200 ${
-                    isUpcoming(booking.slot.endTime)
-                      ? 'border-gray-200 hover:border-primary-300 hover:shadow-md'
-                      : 'border-gray-200 bg-gray-50'
-                  }`}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
-                      <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center">
-                        {getGameModeIcon(booking.gameMode)}
-                      </div>
-                      
-                      <div>
-                        <h3 className="text-lg font-semibold text-gray-800">
-                          {formatDate(booking.slot.startTime)}
-                        </h3>
-                        <div className="flex items-center space-x-4 text-sm text-gray-600">
-                          <div className="flex items-center space-x-1">
-                            <Clock className="w-4 h-4" />
-                            <span>{formatTime(booking.slot.startTime)} - {formatTime(booking.slot.endTime)}</span>
-                          </div>
-                          <div className="flex items-center space-x-1">
-                            <span>Court {booking.subCourtIndex + 1}</span>
+                  <motion.div
+                    key={booking._id}
+                    className={`p-6 rounded-lg border-2 transition-all duration-200 ${
+                      booking.slot && booking.slot.endTime && isUpcoming(booking.slot.endTime)
+                        ? 'border-gray-200 hover:border-primary-300 hover:shadow-md'
+                        : 'border-gray-200 bg-gray-50'
+                    }`}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-4">
+                        <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center">
+                          {getGameModeIcon(booking.gameMode)}
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-800">
+                            {booking.slot?.startTime ? formatDate(booking.slot.startTime) : 'No Date'}
+                          </h3>
+                          <div className="flex items-center space-x-4 text-sm text-gray-600">
+                            <div className="flex items-center space-x-1">
+                              <Clock className="w-4 h-4" />
+                              <span>{booking.slot?.startTime && booking.slot?.endTime ? `${formatTime(booking.slot.startTime)} - ${formatTime(booking.slot.endTime)}` : 'No Time'}</span>
+                            </div>
+                            <div className="flex items-center space-x-1">
+                              <span>Court {typeof booking.subCourtIndex === 'number' ? booking.subCourtIndex + 1 : 'N/A'}</span>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
 
                     <div className="flex items-center space-x-4">
                       {/* Game Mode Badge */}
@@ -188,11 +187,11 @@ const MyBookingsPage = () => {
 
                       {/* Status Badge */}
                       <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${
-                        isUpcoming(booking.slot.endTime)
+                        booking.slot && booking.slot.endTime && isUpcoming(booking.slot.endTime)
                           ? 'bg-green-100 text-green-800 border-green-200'
                           : 'bg-gray-100 text-gray-800 border-gray-200'
                       }`}>
-                        {isUpcoming(booking.slot.endTime) ? (
+                        {booking.slot && booking.slot.endTime && isUpcoming(booking.slot.endTime) ? (
                           <>
                             <CheckCircle className="w-4 h-4 mr-1" />
                             <span>Upcoming</span>
@@ -206,7 +205,7 @@ const MyBookingsPage = () => {
                       </div>
 
                       {/* Cancel Button */}
-                      {isUpcoming(booking.slot.endTime) && (
+                      {booking.slot && booking.slot.endTime && isUpcoming(booking.slot.endTime) && (
                         <button
                           onClick={() => cancelBooking(booking._id)}
                           className="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-colors duration-200"
@@ -219,29 +218,29 @@ const MyBookingsPage = () => {
                   </div>
 
                   {/* Additional Info */}
-                  <div className="mt-4 pt-4 border-t border-gray-100">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                      <div>
-                        <span className="font-medium text-gray-700">Players:</span>
-                        <span className="ml-2 text-gray-600">{booking.playersCount}</span>
-                      </div>
-                      <div>
-                        <span className="font-medium text-gray-700">Court Type:</span>
-                        <span className="ml-2 text-gray-600 capitalize">{booking.gameMode}</span>
-                      </div>
-                      <div>
-                        <span className="font-medium text-gray-700">Booked On:</span>
-                        <span className="ml-2 text-gray-600">
-                          {new Date(booking.createdAt).toLocaleDateString('en-US', {
-                            month: 'short',
-                            day: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                          })}
-                        </span>
+                    <div className="mt-4 pt-4 border-t border-gray-100">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                        <div>
+                          <span className="font-medium text-gray-700">Players:</span>
+                          <span className="ml-2 text-gray-600">{typeof booking.playersCount === 'number' ? booking.playersCount : 'N/A'}</span>
+                        </div>
+                        <div>
+                          <span className="font-medium text-gray-700">Court Type:</span>
+                          <span className="ml-2 text-gray-600 capitalize">{booking.gameMode || 'N/A'}</span>
+                        </div>
+                        <div>
+                          <span className="font-medium text-gray-700">Booked On:</span>
+                          <span className="ml-2 text-gray-600">
+                            {booking.createdAt ? new Date(booking.createdAt).toLocaleDateString('en-US', {
+                              month: 'short',
+                              day: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            }) : 'N/A'}
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
                 </motion.div>
               ))}
             </div>
@@ -250,35 +249,15 @@ const MyBookingsPage = () => {
 
         {/* Quick Stats */}
         {bookings.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-6 text-center">
+          <div className="flex justify-center mt-8">
+            <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-6 text-center w-full max-w-md">
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3">
                 <Calendar className="w-6 h-6 text-blue-600" />
               </div>
               <h3 className="text-2xl font-bold text-gray-800">
-                {bookings.filter(b => isUpcoming(b.slot.endTime)).length}
+                {bookings.filter(b => b.slot && b.slot.endTime && isUpcoming(b.slot.endTime)).length}
               </h3>
               <p className="text-gray-600">Upcoming Bookings</p>
-            </div>
-
-            <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-6 text-center">
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                <CheckCircle className="w-6 h-6 text-green-600" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-800">
-                {bookings.filter(b => !isUpcoming(b.slot.endTime)).length}
-              </h3>
-              <p className="text-gray-600">Completed Bookings</p>
-            </div>
-
-            <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-6 text-center">
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                <Users className="w-6 h-6 text-purple-600" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-800">
-                {bookings.reduce((sum, b) => sum + b.playersCount, 0)}
-              </h3>
-              <p className="text-gray-600">Total Players Booked</p>
             </div>
           </div>
         )}

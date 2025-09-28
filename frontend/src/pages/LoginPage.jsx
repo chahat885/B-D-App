@@ -117,7 +117,7 @@ const LoginPage = () => {
   const handleResendOTP = async () => {
     setLoading(true);
     try {
-      const response = await axios.post(`${API_BASE}/api/auth/send-otp`, {
+      const response = await axios.post(`${API_BASE}/api/auth/resend-otp`, {
         email: formData.email
       });
       showMessage('success', response.data.message);

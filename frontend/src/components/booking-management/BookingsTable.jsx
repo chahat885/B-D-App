@@ -45,31 +45,33 @@ const BookingsTable = ({ bookings, loading, onCancelBooking }) => {
             >
               <td className="py-3 px-4">
                 <div>
-                  <div className="font-medium text-gray-800">{booking.user.name}</div>
-                  <div className="text-sm text-gray-500">{booking.user.email}</div>
+                  <div className="font-medium text-gray-800">{booking.user?.name || 'N/A'}</div>
+                  <div className="text-sm text-gray-500">{booking.user?.email || 'N/A'}</div>
                 </div>
               </td>
               <td className="py-3 px-4">
                 <div>
                   <div className="font-medium text-gray-800">
-                    {new Date(booking.slot.startTime).toLocaleDateString()}
+                    {booking.slot?.startTime ? new Date(booking.slot.startTime).toLocaleDateString() : 'No Date'}
                   </div>
                   <div className="text-sm text-gray-500">
-                    {new Date(booking.slot.startTime).toLocaleTimeString('en-US', {
-                      hour: '2-digit',
-                      minute: '2-digit',
-                      hour12: true
-                    })} - {new Date(booking.slot.endTime).toLocaleTimeString('en-US', {
-                      hour: '2-digit',
-                      minute: '2-digit',
-                      hour12: true
-                    })}
+                    {booking.slot?.startTime && booking.slot?.endTime
+                      ? `${new Date(booking.slot.startTime).toLocaleTimeString('en-US', {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          hour12: true
+                        })} - ${new Date(booking.slot.endTime).toLocaleTimeString('en-US', {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          hour12: true
+                        })}`
+                      : 'No Time'}
                   </div>
                 </div>
               </td>
               <td className="py-3 px-4">
                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                  Court {booking.subCourtIndex + 1}
+                  Court {typeof booking.subCourtIndex === 'number' ? booking.subCourtIndex + 1 : 'N/A'}
                 </span>
               </td>
               <td className="py-3 px-4">
@@ -78,17 +80,17 @@ const BookingsTable = ({ bookings, loading, onCancelBooking }) => {
                     ? 'bg-green-100 text-green-800' 
                     : 'bg-purple-100 text-purple-800'
                 }`}>
-                  {booking.gameMode.charAt(0).toUpperCase() + booking.gameMode.slice(1)}
+                  {booking.gameMode ? booking.gameMode.charAt(0).toUpperCase() + booking.gameMode.slice(1) : 'N/A'}
                 </span>
               </td>
               <td className="py-3 px-4">
                 <div className="flex items-center space-x-1">
                   <Users className="w-4 h-4 text-gray-400" />
-                  <span className="text-sm font-medium">{booking.playersCount}</span>
+                  <span className="text-sm font-medium">{typeof booking.playersCount === 'number' ? booking.playersCount : 'N/A'}</span>
                 </div>
               </td>
               <td className="py-3 px-4 text-sm text-gray-500">
-                {new Date(booking.createdAt).toLocaleString()}
+                {booking.createdAt ? new Date(booking.createdAt).toLocaleString() : 'N/A'}
               </td>
               <td className="py-3 px-4">
                 <button

@@ -198,7 +198,9 @@ router.post(
 
 // ==============================
 // Get all bookings (admin only)
-// ==============================
+// ==============================     
+
+
 router.get('/all', auth(), async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
@@ -228,6 +230,7 @@ router.get('/my-bookings', auth(), async (req, res) => {
     })
       .populate('slot', 'startTime endTime')
       .sort({ createdAt: -1 });
+    return res.json(bookings);
 
     return res.json(bookings);
   } catch (error) {
